@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Recipe } from '../types/Recipe';
+import { fractionToDecimal, isValidFraction, decimalToFraction } from '../utils/fractionalUtils';
+
 
 interface AddRecipeProps {
   onAddRecipe: (recipe: Recipe) => void;
@@ -37,6 +39,9 @@ export function AddRecipe({ onAddRecipe, onEditRecipe, editingRecipe }: AddRecip
     }
   );
   const [newTag, setNewTag] = useState('');
+  const [ingredientFractions, setIngredientFractions] = useState<string[]>(
+    editingRecipe?.ingredients.map(ing => decimalToFraction(ing.amount)) || []
+  );
 
   useEffect(() => {
     if (editingRecipe) {
@@ -231,47 +236,53 @@ export function AddRecipe({ onAddRecipe, onEditRecipe, editingRecipe }: AddRecip
         </section>
 
         <section>
-          <h2 className="section-title">Ingredients</h2>
-          {recipe.ingredients?.map((ingredient, index) => (
-            <div key={index} className="array-input">
-              <input
-                type="text"
-                placeholder="Item"
-                required
-                value={ingredient.item}
-                onChange={e => {
+        <h2 className="section-title">Ingredients</h2>
+        {recipe.ingredients?.map((ingredient, index) => (
+          <div key={index} className="array-input">
+            <input
+              type="text"
+              placeholder="Item"
+              required
+              value={ingredient.item}
+              onChange={e => {
+                const newIngredients = [...(recipe.ingredients || [])];
+                newIngredients[index].item = e.target.value;
+                setRecipe(prev => ({ ...prev, ingredients: newIngredients }));
+              }}
+              className="form-input"
+            />
+            <input
+              type="text"
+              placeholder="Amount (e.g., 1 1/2)"
+              required
+              value={ingredientFractions[index] || ''}
+              onChange={e => {
+                const value = e.target.value;
+                const newFractions = [...ingredientFractions];
+                newFractions[index] = value;
+                setIngredientFractions(newFractions);
+
+                if (isValidFraction(value)) {
+                  const decimal = fractionToDecimal(value);
                   const newIngredients = [...(recipe.ingredients || [])];
-                  newIngredients[index].item = e.target.value;
+                  newIngredients[index].amount = decimal;
                   setRecipe(prev => ({ ...prev, ingredients: newIngredients }));
-                }}
-                className="form-input"
-              />
-              <input
-                type="number"
-                placeholder="Amount"
-                required
-                value={ingredient.amount}
-                onChange={e => {
-                  const newIngredients = [...(recipe.ingredients || [])];
-                  newIngredients[index].amount = parseFloat(e.target.value);
-                  setRecipe(prev => ({ ...prev, ingredients: newIngredients }));
-                }}
-                className="form-input w-24"
-                min={0}
-                step="0.1"
-              />
-              <input
-                type="text"
-                placeholder="Unit"
-                required
-                value={ingredient.unit}
-                onChange={e => {
-                  const newIngredients = [...(recipe.ingredients || [])];
-                  newIngredients[index].unit = e.target.value;
-                  setRecipe(prev => ({ ...prev, ingredients: newIngredients }));
-                }}
-                className="form-input w-32"
-              />
+                }
+              }}
+              className={`form-input ${!isValidFraction(ingredientFractions[index]) ? 'border-red-500' : ''}`}
+            />
+            <input
+              type="text"
+              placeholder="Unit"
+              required
+              value={ingredient.unit}
+              onChange={e => {
+                const newIngredients = [...(recipe.ingredients || [])];
+                newIngredients[index].unit = e.target.value;
+                setRecipe(prev => ({ ...prev, ingredients: newIngredients }));
+              }}
+              className="form-input w-32"
+            />
               <input
                 type="text"
                 placeholder="Notes (optional)"
@@ -296,9 +307,16 @@ export function AddRecipe({ onAddRecipe, onEditRecipe, editingRecipe }: AddRecip
               </button>
             </div>
           ))}
-          <button type="button" onClick={addIngredient} className="btn btn-success mt-2">
-            Add Ingredient
-          </button>
+          <button 
+          type="button" 
+          onClick={() => {
+            addIngredient();
+            setIngredientFractions(prev => [...prev, '']);
+          }} 
+          className="btn btn-success mt-2"
+        >
+          Add Ingredient
+        </button>
         </section>
 
         <section>

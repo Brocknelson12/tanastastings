@@ -2,6 +2,8 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { Recipe } from '../types/Recipe';
+import { decimalToFraction } from '../utils/fractionalUtils';
+
 
 interface RecipeDetailProps {
   recipes: Recipe[];
@@ -75,22 +77,22 @@ export function RecipeDetail({ recipes, onEditRecipe }: RecipeDetailProps) {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-8">
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Ingredients</h2>
-            <ul className="space-y-2">
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="font-medium">
-                    {ingredient.amount} {ingredient.unit}
-                  </span>
-                  <span>{ingredient.item}</span>
-                  {ingredient.notes && (
-                    <span className="text-gray-600">({ingredient.notes})</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Ingredients</h2>
+          <ul className="space-y-2">
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index} className="flex items-start gap-2">
+                <span className="font-medium">
+                  {decimalToFraction(ingredient.amount)} {ingredient.unit}
+                </span>
+                <span>{ingredient.item}</span>
+                {ingredient.notes && (
+                  <span className="text-gray-600">({ingredient.notes})</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
 
           <div>
             <h2 className="text-xl font-semibold mb-4">Instructions</h2>
