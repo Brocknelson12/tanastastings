@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .form-group {
+    @apply flex flex-col gap-2 mb-6;
+  }
+
+  .form-label {
+    @apply font-medium text-gray-700 text-sm;
+  }
+
+  .form-input {
+    @apply p-3 border border-gray-300 rounded-md text-base w-full focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors;
+  }
+
+  .form-textarea {
+    @apply form-input min-h-[100px] resize;
+  }
+
+  .btn {
+    @apply px-4 py-3 rounded-md font-medium transition-colors cursor-pointer border-none;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark;
+  }
+
+  .btn-success {
+    @apply bg-success text-white hover:bg-success-dark;
+  }
+
+  .btn-danger {
+    @apply bg-primary-dark text-white hover:bg-primary;
+  }
+
+  .array-input {
+    @apply flex gap-2 mb-2 items-start;
+  }
+
+  .array-input input,
+  .array-input textarea {
+    @apply flex-1;
+  }
+
+  .nutrition-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4;
+  }
+
+  .section-title {
+    @apply text-xl font-semibold text-primary mb-4;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow;
+  }
+
+  .tag {
+    @apply px-2 py-1 rounded-full text-sm font-medium;
+  }
+
+  .tag-input {
+    @apply p-2 border border-gray-300 rounded-md text-sm;
+  }
+
+  .header-logo {
+    @apply flex items-center justify-center py-8;
+  }
+}
+
+@media print {
+  @page {
+    margin: 1cm;
+    size: portrait;
+  }
+
+  body {
+    font-size: 12pt;
+  }
+
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\\:p-0 {
+    padding: 0 !important;
+  }
+
+  .print\\:p-4 {
+    padding: 1rem !important;
+  }
+
+  .print\\:bg-transparent {
+    background-color: transparent !important;
+  }
+
+  .print\\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .print\\:text-left {
+    text-align: left !important;
+  }
+
+  .print\\:mt-0 {
+    margin-top: 0 !important;
+  }
+}

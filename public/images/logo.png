@@ -1,0 +1,1 @@
+<command>mkdir -p public/images && curl -o public/images/logo.png https://raw.githubusercontent.com/stackblitz/webcontainer-core/main/assets/logo.png</command>
